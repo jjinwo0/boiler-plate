@@ -58,7 +58,7 @@ userSchema.pre('save', function( next ){
 userSchema.methods.comparePassword = function(plainPassword, cb){
     //plainPassword를 암호화하여 비교
     bcrypt.compare(plainPassword, this.password, function(err, isMatch){
-        if(err) return cb(err),
+        if(err) return cb(err);
         cb(null, isMatch)
     })
 }
@@ -74,8 +74,34 @@ userSchema.methods.generateToken = function(cb){
 
     user.token = token
     user.save(function(err, user){
-        if(err) return cb(err)
+        if(err) return cb(err);
         cb(null, user)
+    })
+}
+
+userSchema.statics.findByToken = function(token, cb){
+    var user = this;
+
+    jwt.verify(token, 'secretToken', function(err, decoded){
+
+        user.findOne({"_id" : decoded, "token" : token}, function(err, user){
+            if(err) return cb(err);
+            cb(null, user);
+        })
+    })
+}
+
+userSchema.statics.findByToken = function(token, cb){
+    var user = this;
+
+    //token을 decode
+    jwt.verify(token, 'secretToken', function(err, decoded){
+        //유저 id를 이용해서 유저 find
+        //client token과 DB token Compare
+        user.findOne({"_id": decoded, "token": token}, function(err, user){
+            if(err) return cb(err);
+            cb(null, user)
+        })
     })
 }
 
