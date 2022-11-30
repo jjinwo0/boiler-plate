@@ -13,7 +13,7 @@ let auth = (req, res, next) => {
 
         req.token = token;
         req.user = user;
-        next();
+        next(); //auth middleware에 갇히지 않고 callback함수로 넘어갈 수 있도록
     })
 
     //유저가 있으면 인증 Okay
@@ -22,5 +22,4 @@ let auth = (req, res, next) => {
 
 
 }
-
 module.exports = { auth };

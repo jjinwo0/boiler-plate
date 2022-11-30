@@ -97,7 +97,7 @@ userSchema.statics.findByToken = function(token, cb){
     //token을 decode
     jwt.verify(token, 'secretToken', function(err, decoded){
         //유저 id를 이용해서 유저 find
-        //client token과 DB token Compare
+        //client token과 DB token이 일치하는지 확인
         user.findOne({"_id": decoded, "token": token}, function(err, user){
             if(err) return cb(err);
             cb(null, user)

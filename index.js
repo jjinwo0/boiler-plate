@@ -62,13 +62,14 @@ mongoose.connect(config.mongoURI, {
           .status(200)
           .json({ loginSuccess: true, user_id: user._id})
         })
-        
       })
     })
   })
 
+  //middleware - auth
+  //req받은 후 callback함수로 도달하기 전에 추가적인 동작
   app.get('/api/users/auth', auth, (req, res) => {
-    //Authentication이 true여야 위치 가능
+    //Authentication이 true여야 이곳으로 넘어올 수 있음
     res.status(200).json({
       _id: req.user._id,
       isAdmin: req.user.role === 0 ? false : true,
@@ -79,6 +80,17 @@ mongoose.connect(config.mongoURI, {
       role: req.user.role,
       image: req.user.image
     })
+  })
+
+  app.get('/api/users/logout', auth, (req, res) => {
+    User.findOneAndUpdate({ _id: req.user._id },
+      { token: ""},
+      (err, user) => {
+        if(err) return res.json({ success: false, err});
+        return res.status(200).send({
+          success: true
+        })
+      })
   })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
