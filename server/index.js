@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { auth } = require('./middleware/auth');
 const { User } = require('./models/User');
-const config = require('./config/key');
+const config = require('./server/config/key');
 
 
 //application/x-www-form-urlencoded
